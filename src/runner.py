@@ -23,9 +23,10 @@ class Runner:
             for s_player_name, i_score in dc_players_scores.items():
                 dc_players[s_player_name] = dc_players.get(s_player_name, 0) + i_score
 
-            self.o_excel_manager.write_results(s_exercise_id, l_exercise_result)
+            self.o_excel_manager.write_results_beautify(s_exercise_id, l_exercise_result)
         dc_played_ordered = dict(sorted(dc_players.items(), key=lambda item: item[1], reverse=True))
         self.o_excel_manager.create_score_sheet(dc_played_ordered)
+
         self.o_excel_manager.close()
 
     @staticmethod

@@ -13,26 +13,30 @@ class ExcelManager:
     def __post_init__(self):
         self.o_workbook = Workbook(f'{self.s_folder_path}/CG_tournament_{self.s_game_name}.xlsx')
 
-    def write_results(self, s_exercise_id: str, l_results: List[str]):
-        o_worksheet = self.o_workbook.add_worksheet(s_exercise_id[:31])
-        self._write_header(o_worksheet)
-        for i, s_result in enumerate(l_results):
-            o_worksheet.write(f'A{i + 2}', s_result)
-            o_worksheet.write(f'B{i + 2}', len(l_results) - i)
-
     def create_score_sheet(self, dc_players: Dict[str, int]) -> None:
         o_worksheet = self.o_workbook.add_worksheet('Score')
-        self._write_header(o_worksheet)
-        for i, (s_player_name, i_score) in enumerate(dc_players.items()):
-            o_worksheet.write(f'A{i + 2}', s_player_name)
-            o_worksheet.write(f'B{i + 2}', i_score)
+        data = [[s_player_name, i_score] for i, (s_player_name, i_score) in enumerate(dc_players.items())]
+        self._write_header(o_worksheet, data, 'Score')
 
-    def _write_header(self, o_worksheet) -> None:
+    @staticmethod
+    def _write_header(o_worksheet, l_score: List[List[str | int]], s_exercise_id: str) -> None:
         o_worksheet.set_column(0, 1, 25)
-        s_column_a = 'Player Name'
-        s_column_b = 'Total Points'
-        o_worksheet.write(f'A1', s_column_a)
-        o_worksheet.write(f'B1', s_column_b)
+        o_worksheet.add_table(f'A1:B{len(l_score) + 1}',
+                              {'data': l_score,
+                               'autofilter': False,
+                               'name': f'marklist_{s_exercise_id}',
+                               'columns': [
+                                   {'header': 'Player Name'},
+                                   {'header': 'Total Points'}
+                               ]
+                               })
 
     def close(self):
         self.o_workbook.close()
+
+    def write_results_beautify(self, s_exercise_id: str, l_results: List[str]):
+        o_worksheet = self.o_workbook.add_worksheet(s_exercise_id[:31])
+        o_worksheet.set_column(0, 1, 25)
+        data = [[s_result, len(l_results) - i] for i, s_result in enumerate(l_results)]
+        self._write_header(o_worksheet, data, s_exercise_id)
+
