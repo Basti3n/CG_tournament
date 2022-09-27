@@ -15,25 +15,24 @@ class ExcelManager:
 
     def write_results(self, s_exercise_id: str, l_results: List[str]):
         o_worksheet = self.o_workbook.add_worksheet(s_exercise_id[:31])
-
-        s_column_a = 'Player Name'
-        s_column_b = 'Points'
-        o_worksheet.write(f'A1', s_column_a)
-        o_worksheet.write(f'B1', s_column_b)
-
+        self._write_header(o_worksheet)
         for i, s_result in enumerate(l_results):
             o_worksheet.write(f'A{i + 2}', s_result)
-            o_worksheet.write(f'B{i + 2}', i)
+            o_worksheet.write(f'B{i + 2}', len(l_results) - i)
 
     def create_score_sheet(self, dc_players: Dict[str, int]) -> None:
-        o_worksheet = self.o_workbook.add_worksheet("Score")
+        o_worksheet = self.o_workbook.add_worksheet('Score')
+        self._write_header(o_worksheet)
+        for i, (s_player_name, i_score) in enumerate(dc_players.items()):
+            o_worksheet.write(f'A{i + 2}', s_player_name)
+            o_worksheet.write(f'B{i + 2}', i_score)
+
+    def _write_header(self, o_worksheet) -> None:
+        o_worksheet.set_column(0, 1, 25)
         s_column_a = 'Player Name'
         s_column_b = 'Total Points'
         o_worksheet.write(f'A1', s_column_a)
         o_worksheet.write(f'B1', s_column_b)
-        for i,(s_player_name, i_score) in enumerate(dc_players.items()):
-            o_worksheet.write(f'A{i + 2}', s_player_name)
-            o_worksheet.write(f'B{i + 2}', i_score)
 
     def close(self):
         self.o_workbook.close()

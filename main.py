@@ -18,8 +18,10 @@ def main() -> None:
     o_excel_manager = ExcelManager(s_tournament_name)
     o_api_manager = ApiManager()
     l_exercice_id = [
-        '264313216d6716711e1050ea0f4139781423128',
-        '2643120650c0e3f2e8f3fe9fbbd7a5077519292'
+        '26454410a0198904f51696d4f7e14875a3b88a4',
+        '264541859d1c3d801283bea370d738a6fbd9f24',
+        '2645399faf1c1d6fd67e95971170879516d18bd',
+        '2645388938bbb5f98127be27c10426e5d55260c'
         ]
 
     Runner(l_exercice_id, o_excel_manager, o_api_manager).run()
